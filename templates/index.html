@@ -3,70 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ERTWRX Falling Snow</title>
+  <title>To YOU, in 2000 years...</title>
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background-color: teal; /* Set the background color to teal */
+      background-color: black;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      color: #00ff00; /* Matrix green color */
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
     }
 
     .flipping-text {
-      font-family: 'Netflix Sans', sans-serif; /* Netflix font family */
-      font-size: 15vmin; /* 15% of the viewport height */
-      font-weight: bold; /* Bold font weight */
-      color: red; /* Font color changed to red */
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); /* Add a subtle white shadow for emphasis */
+      font-family: 'Netflix Sans', sans-serif;
+      font-size: 15vmin;
+      font-weight: bold;
+      color: red;
       position: relative;
-      z-index: 2; /* Place the text above the snowflakes */
-      animation: flip 4s linear infinite; /* Flipping animation */
+      z-index: 2;
+      text-shadow: 0 0 5px #ff0000, 0 0 10px #ff00ff, 0 0 15px #00ff00, 0 0 20px #00ffff, 0 0 25px #0000ff, 0 0 30px #ff0000, 0 0 35px #ff00ff, 0 0 40px #00ff00, 0 0 45px #00ffff; /* Decreased shadow size by 50% */
     }
 
-    /* Add the following styles for the snow */
-    .snowflake {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      animation: fall linear infinite;
-      animation-duration: 5s; /* Duration of the fall animation */
-      animation-delay: calc(-1 * var(--animation-duration) * random()); /* Randomize the start time */
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-      }
-    }
-
-    @keyframes flip {
-      0% {
-        transform: perspective(400px) rotateX(0deg) rotateY(0deg);
-      }
-      25% {
-        transform: perspective(400px) rotateX(180deg) rotateY(0deg);
-      }
-      50% {
-        transform: perspective(400px) rotateX(180deg) rotateY(180deg);
-      }
-      75% {
-        transform: perspective(400px) rotateX(0deg) rotateY(180deg);
-      }
-      100% {
-        transform: perspective(400px) rotateX(0deg) rotateY(0deg);
-      }
-    }
-
-    /* Add styles for the rounded 3D button */
     .button-container {
       position: relative;
       z-index: 1;
@@ -74,55 +36,62 @@
     }
 
     .button {
-      padding: 15px 30px; /* Increased padding */
-      background-color: #3498db; /* Button background color */
-      color: #fff; /* Button text color */
-      font-size: 20px; /* Increased font size */
+      padding: 15px 30px;
+      background-color: #3498db;
+      color: #fff;
+      font-size: 20px;
       font-weight: bold;
       border: none;
-      border-radius: 20px; /* Rounded corners */
+      border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s;
-      transform-style: preserve-3d; /* Enable 3D transformations */
-      text-decoration: none; /* Remove underline on hover */
+      transform-style: preserve-3d;
+      text-decoration: none;
       position: relative;
       overflow: hidden;
-      animation: blink 0.5s infinite alternate; /* Blinking animation */
+      animation: blink 1s infinite alternate, breathe 3s infinite ease-in-out;
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.8) inset; /* Inner glow effect */
     }
 
     @keyframes blink {
       0% {
         color: #ff00ff;
-        text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+        text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff;
+      }
+      25% {
+        color: #00ffff;
+        text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+      }
+      50% {
+        color: #00ff00;
+        text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00;
+      }
+      75% {
+        color: #ff0000;
+        text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
       }
       100% {
-        color: #00ffff;
-        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+        color: #ff00ff;
+        text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff;
+      }
+    }
+
+    @keyframes breathe {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
       }
     }
   </style>
 </head>
 <body>
   <div class="flipping-text">ERTWRX</div>
-  <!-- Add multiple snowflake elements dynamically using JavaScript -->
-  <script>
-    for (let i = 0; i < 100; i++) { // Adjust the number of snowflakes as needed
-      createSnowflake();
-    }
 
-    function createSnowflake() {
-      const snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      snowflake.style.top = `${Math.random() * 100}vh`;
-      snowflake.style.left = `${Math.random() * 100}vw`;
-      document.body.appendChild(snowflake);
-    }
-  </script>
-
-  <!-- Add the rounded 3D button with the link -->
   <div class="button-container">
     <a href="https://www.youtube.com/@chace2019" target="_blank" class="button">
-      CLICK HERE!
+      Click & Subscribe Now.
     </a>
   </div>
 </body>
