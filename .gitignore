@@ -1,0 +1,23 @@
+
+---
+
+### **`.gitignore`**
+
+Here’s a `.gitignore` file to ignore unnecessary files such as the virtual environment and Python bytecode:
+
+```gitignore
+# Virtual environment
+/venv/
+# MacOS files
+.DS_Store
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+# IDEs
+.vscode/
+.idea/
+# Flask instance folder
+instance/
+# Flask .env file for sensitive information
+.env
