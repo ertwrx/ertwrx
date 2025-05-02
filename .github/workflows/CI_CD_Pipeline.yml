@@ -60,7 +60,7 @@ jobs:
         pytest --cov=app tests/ || true
         
     - name: Upload test results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: test-results
         path: |
@@ -92,7 +92,7 @@ jobs:
         tar -czf dist/ertwrx-app.tar.gz --exclude='.git' --exclude='dist' --exclude='.github' .
         
     - name: Upload build artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: app-build
         path: dist/
@@ -105,7 +105,7 @@ jobs:
     
     steps:
     - name: Download build artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: app-build
         path: dist/
@@ -152,7 +152,7 @@ jobs:
     
     steps:
     - name: Download build artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: app-build
         path: dist/
