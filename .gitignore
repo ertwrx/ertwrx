@@ -21,3 +21,4 @@ __pycache__/
 instance/
 # Flask .env file for sensitive information
 .env
+ertwrx/
