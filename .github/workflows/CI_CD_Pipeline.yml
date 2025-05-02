@@ -139,7 +139,7 @@ jobs:
           pip install -r app-current/requirements.txt
           supervisorctl start ertwrx-app || true
           rm ertwrx-app.tar.gz
-EOF
+        EOF
         
   deploy-production:
     name: Deploy to Production
@@ -186,4 +186,4 @@ EOF
           pip install -r app-current/requirements.txt
           supervisorctl start ertwrx-app || true
           rm ertwrx-app.tar.gz
-EOF
+        EOF
