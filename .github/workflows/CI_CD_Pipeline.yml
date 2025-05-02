@@ -32,10 +32,20 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libdbus-1-dev pkg-config build-essential cmake
+        sudo apt-get install -y \
+        libdbus-1-dev \
+        libglib2.0-dev \
+        pkg-config \
+        build-essential \
+        cmake \
+        libffi-dev \
+        libssl-dev \
+        python3-dev
+
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install pytest pytest-cov flake8 black
+
         
     - name: Lint with flake8
       run: |
