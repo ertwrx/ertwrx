@@ -168,8 +168,35 @@ jobs:
     - name: Test application startup
       run: |
         cd app-current
+        # Find and determine Flask app structure
+        if [ -f app.py ]; then
+          echo "Found app.py"
+          # Check for different common Flask patterns
+          if grep -q "app = " app.py; then
+            echo "Found app variable in app.py"
+            APP_MODULE="app:app"
+          elif grep -q "create_app" app.py; then
+            echo "Found create_app function in app.py"
+            APP_MODULE="app:create_app()"
+          else
+            echo "Using default app module"
+            APP_MODULE="app:app"
+          fi
+        elif [ -f wsgi.py ]; then
+          echo "Found wsgi.py"
+          APP_MODULE="wsgi:app"
+        elif [ -d app ] && [ -f app/__init__.py ]; then
+          echo "Found app package"
+          APP_MODULE="app:app" 
+        else
+          echo "Could not determine Flask app structure, using default"
+          APP_MODULE="app:app"
+        fi
+        
+        echo "Using APP_MODULE: $APP_MODULE"
+        
         # Test application startup - kill after 5 seconds
-        timeout 5 gunicorn "app:app" --bind 0.0.0.0:8000 || true
+        timeout 5 gunicorn "$APP_MODULE" --bind 0.0.0.0:8000 || true
         echo "Application successfully started on staging environment"
         
     - name: Create deployment summary
@@ -246,8 +273,35 @@ jobs:
     - name: Test application startup
       run: |
         cd app-current
+        # Find and determine Flask app structure
+        if [ -f app.py ]; then
+          echo "Found app.py"
+          # Check for different common Flask patterns
+          if grep -q "app = " app.py; then
+            echo "Found app variable in app.py"
+            APP_MODULE="app:app"
+          elif grep -q "create_app" app.py; then
+            echo "Found create_app function in app.py"
+            APP_MODULE="app:create_app()"
+          else
+            echo "Using default app module"
+            APP_MODULE="app:app"
+          fi
+        elif [ -f wsgi.py ]; then
+          echo "Found wsgi.py"
+          APP_MODULE="wsgi:app"
+        elif [ -d app ] && [ -f app/__init__.py ]; then
+          echo "Found app package"
+          APP_MODULE="app:app" 
+        else
+          echo "Could not determine Flask app structure, using default"
+          APP_MODULE="app:app"
+        fi
+        
+        echo "Using APP_MODULE: $APP_MODULE"
+        
         # Test application startup - kill after 5 seconds
-        timeout 5 gunicorn "app:app" --bind 0.0.0.0:8000 || true
+        timeout 5 gunicorn "$APP_MODULE" --bind 0.0.0.0:8000 || true
         echo "Application successfully started on production environment"
         
     - name: Create deployment summary
