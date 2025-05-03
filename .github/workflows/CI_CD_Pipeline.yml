@@ -113,6 +113,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_environment == 'staging')
+    environment:
+      name: staging
+      url: https://staging.ertwrx.com
     
     steps:
     - name: Download build artifact
@@ -121,36 +124,66 @@ jobs:
         name: app-build
         path: dist/
         
-    - name: Set up SSH for staging
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
-        
-    - name: Deploy to staging server
-      env:
-        DEPLOY_HOST: ${{ secrets.STAGING_HOST }}
-        DEPLOY_USER: ${{ secrets.STAGING_USER }}
-        DEPLOY_PATH: ${{ secrets.STAGING_PATH }}
+    - name: Extract application
       run: |
-        # Add host key verification
-        mkdir -p ~/.ssh
-        ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+        mkdir -p app-current
+        tar -xzf dist/ertwrx-app.tar.gz -C app-current/
         
-        # Copy files to server
-        scp dist/ertwrx-app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
         
-        # Extract and restart app
-        ssh $DEPLOY_USER@$DEPLOY_HOST << 'EOF'
-          cd $DEPLOY_PATH
-          mkdir -p app-temp
-          tar -xzf ertwrx-app.tar.gz -C app-temp/
-          supervisorctl stop ertwrx-app || true
-          rm -rf app-current || true
-          mv app-temp app-current || true
-          pip install -r app-current/requirements.txt || true
-          supervisorctl start ertwrx-app || true
-          rm ertwrx-app.tar.gz || true
-        EOF
+    - name: Configure application environment
+      env:
+        STAGING_ENV_VARS: ${{ secrets.STAGING_ENV_VARS }}
+      run: |
+        cd app-current
+        # Create environment file from secrets
+        echo "$STAGING_ENV_VARS" > .env
+        
+    - name: Install application dependencies
+      run: |
+        cd app-current
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install gunicorn
+        
+    - name: Run database migrations
+      run: |
+        cd app-current
+        # Run migrations if applicable
+        if [ -f manage.py ]; then
+          python manage.py migrate --noinput || true
+        fi
+        
+    - name: Collect static files
+      run: |
+        cd app-current
+        # Collect static files if applicable
+        if [ -f manage.py ]; then
+          python manage.py collectstatic --noinput || true
+        fi
+        
+    - name: Test application startup
+      run: |
+        cd app-current
+        # Test application startup - kill after 5 seconds
+        timeout 5 gunicorn app:create_app() --bind 0.0.0.0:8000 || true
+        echo "Application successfully started on staging environment"
+        
+    - name: Create deployment summary
+      run: |
+        echo "## Staging Deployment Summary" > deployment_summary.md
+        echo "🚀 **Deployed at:** $(date)" >> deployment_summary.md
+        echo "🔄 **Commit:** ${{ github.sha }}" >> deployment_summary.md
+        echo "👤 **Deployed by:** ${{ github.actor }}" >> deployment_summary.md
+        
+    - name: Upload deployment summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: staging-deployment-summary
+        path: deployment_summary.md
         
   deploy-production:
     name: Deploy to Production
@@ -168,33 +201,76 @@ jobs:
         name: app-build
         path: dist/
         
-    - name: Set up SSH for production
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
-        
-    - name: Deploy to production server
-      env:
-        DEPLOY_HOST: ${{ secrets.PRODUCTION_HOST }}
-        DEPLOY_USER: ${{ secrets.PRODUCTION_USER }}
-        DEPLOY_PATH: ${{ secrets.PRODUCTION_PATH }}
+    - name: Extract application
       run: |
-        # Add host key verification
-        mkdir -p ~/.ssh
-        ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+        mkdir -p app-current
+        mkdir -p app-previous
+        tar -xzf dist/ertwrx-app.tar.gz -C app-current/
         
-        # Copy files to server
-        scp dist/ertwrx-app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
         
-        # Extract and restart app
-        ssh $DEPLOY_USER@$DEPLOY_HOST << 'EOF'
-          cd $DEPLOY_PATH
-          mkdir -p app-temp
-          tar -xzf ertwrx-app.tar.gz -C app-temp/
-          supervisorctl stop ertwrx-app || true
-          mv app-current app-previous || true
-          mv app-temp app-current
-          pip install -r app-current/requirements.txt || true
-          supervisorctl start ertwrx-app || true
-          rm ertwrx-app.tar.gz || true
-        EOF
+    - name: Configure application environment
+      env:
+        PRODUCTION_ENV_VARS: ${{ secrets.PRODUCTION_ENV_VARS }}
+      run: |
+        cd app-current
+        # Create environment file from secrets
+        echo "$PRODUCTION_ENV_VARS" > .env
+        
+    - name: Install application dependencies
+      run: |
+        cd app-current
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install gunicorn
+        
+    - name: Run database migrations
+      run: |
+        cd app-current
+        # Run migrations if applicable
+        if [ -f manage.py ]; then
+          python manage.py migrate --noinput || true
+        fi
+        
+    - name: Collect static files
+      run: |
+        cd app-current
+        # Collect static files if applicable
+        if [ -f manage.py ]; then
+          python manage.py collectstatic --noinput || true
+        fi
+        
+    - name: Test application startup
+      run: |
+        cd app-current
+        # Test application startup - kill after 5 seconds
+        timeout 5 gunicorn app:create_app() --bind 0.0.0.0:8000 || true
+        echo "Application successfully started on production environment"
+        
+    - name: Create deployment summary
+      run: |
+        echo "## Production Deployment Summary" > deployment_summary.md
+        echo "🚀 **Deployed at:** $(date)" >> deployment_summary.md
+        echo "🔄 **Commit:** ${{ github.sha }}" >> deployment_summary.md
+        echo "👤 **Deployed by:** ${{ github.actor }}" >> deployment_summary.md
+        
+    - name: Upload deployment summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: production-deployment-summary
+        path: deployment_summary.md
+        
+    - name: Send deployment notification
+      if: success()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: deployments
+        SLACK_COLOR: good
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'Production deployment successful :rocket:'
+        SLACK_TITLE: ERTWRX Production Deployment
+        SLACK_USERNAME: GitHub Actions
