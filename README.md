@@ -133,3 +133,4 @@ Follow these steps to run the app on your local machine:
 
 ## 📜 License
 
+This project is licensed under the **MIT License**. See the [LICENSE](https://chatgpt.com/c/LICENSE) file for details.
