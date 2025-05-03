@@ -1,5 +1,13 @@
 # 🚀 ERTWRX Flask App
 
+[![CI/CD](https://img.shields.io/github/actions/workflow/status/ertwrx/ertwrx/CI_CD_Pipeline.yml?branch=master)](https://github.com/ertwrx/ertwrx/actions/workflows/CI_CD_Pipeline.yml)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.x-lightgrey.svg)](https://flask.palletsprojects.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Last Commit](https://img.shields.io/github/last-commit/ertwrx/ertwrx.svg)](https://github.com/ertwrx/ertwrx/commits/master)
+[![Lines of Code](https://img.shields.io/tokei/lines/github/ertwrx/ertwrx)](https://github.com/ertwrx/ertwrx)
+
+
 ## ✨ Overview
 
 This project is a personal learning example of a simple Flask web app. It shows how to structure a Flask application using an application factory, Blueprints, and environment-based configuration. The homepage displays a stylized **"ERTWRX"** text with a red/gold theme and an animated glowing effect, along with a **Start** button that links to a YouTube video. It is designed to be easy to read and modify for learning purposes.
