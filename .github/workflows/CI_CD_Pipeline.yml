@@ -169,7 +169,7 @@ jobs:
       run: |
         cd app-current
         # Test application startup - kill after 5 seconds
-        timeout 5 gunicorn app:create_app() --bind 0.0.0.0:8000 || true
+        timeout 5 gunicorn "app:app" --bind 0.0.0.0:8000 || true
         echo "Application successfully started on staging environment"
         
     - name: Create deployment summary
@@ -247,7 +247,7 @@ jobs:
       run: |
         cd app-current
         # Test application startup - kill after 5 seconds
-        timeout 5 gunicorn app:create_app() --bind 0.0.0.0:8000 || true
+        timeout 5 gunicorn "app:app" --bind 0.0.0.0:8000 || true
         echo "Application successfully started on production environment"
         
     - name: Create deployment summary
@@ -273,4 +273,3 @@ jobs:
         SLACK_ICON: https://github.com/rtCamp.png?size=48
         SLACK_MESSAGE: 'Production deployment successful :rocket:'
         SLACK_TITLE: ERTWRX Production Deployment
-        SLACK_USERNAME: GitHub Actions
