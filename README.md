@@ -190,4 +190,5 @@ Replace `app:app` with the appropriate module and application instance if they d
 
 ## 📜 License
 
-This project is licensed under the **MIT License**. See the [LICENSE](https://chatgpt.com/c/LICENSE) file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](https://chatgpt.com/c/LICENSE) file for details..
+
