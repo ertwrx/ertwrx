@@ -106,6 +106,63 @@ Follow these steps to run the app on your local machine:
     
     The app will start on [http://localhost:5000](http://localhost:5000/) by default.
     
+## 🚀 Deployment Options
+
+This application can be deployed using various methods. Below are the instructions for running the app with Gunicorn, Docker, and Docker Compose.
+
+### 🔧 Running with Gunicorn
+
+Ensure you have Gunicorn installed:
+
+```bash
+`pip install gunicorn` 
+```
+Then, run the application using Gunicorn:
+
+```bash
+
+
+`gunicorn --bind 0.0.0.0:8000 app:app` 
+```
+Replace `app:app` with the appropriate module and application instance if they differ.
+
+### 🐳 Running with Docker
+
+1.  **Build the Docker image:**
+    
+    ```bash
+ 
+    `docker build -t ertwrx-app .` 
+    ```
+2.  **Run the Docker container:**
+    
+    ```bash
+    
+    
+    'docker run -d -p 8000:8000 ertwrx-app' 
+    ```
+    This command maps port 8000 of the container to port 8000 on your host machine.
+    
+
+### 🛠️ Running with Docker Compose
+
+1.  **Create a `docker-compose.yml` file in the project root with the following content:**
+    
+    ```yaml
+    
+    `version:  '3.8'  services:  web:  build:  .  ports:  -  "8000:8000"  command:  gunicorn  --bind  0.0.0.0:8000  app:app` 
+    ```
+    Adjust the `command` if your application's entry point differs.
+    
+2.  **Start the application using Docker Compose:**
+    
+    ```bash
+    
+    `docker-compose up --build` 
+    ```
+    This command builds the Docker image and starts the container as defined in the `docker-compose.yml` file.
+
+
 
 ## 🎯 Usage
 
