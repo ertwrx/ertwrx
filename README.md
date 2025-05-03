@@ -5,7 +5,7 @@
 [![Flask](https://img.shields.io/badge/Flask-3.x-lightgrey.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Last Commit](https://img.shields.io/github/last-commit/ertwrx/ertwrx.svg)](https://github.com/ertwrx/ertwrx/commits/master)
-[![Lines of Code](https://img.shields.io/tokei/lines/github/ertwrx/ertwrx)](https://github.com/ertwrx/ertwrx)
+[![Lines of Code](https://tokei.rs/b1/github/ertwrx/ertwrx)
 
 
 ## ✨ Overview
