@@ -1,6 +1,6 @@
 # 🚀 ERTWRX Flask App
 
-[![CI/CD](https://img.shields.io/github/actions/workflow/status/ertwrx/ertwrx/CI_CD_Pipeline.yml?branch=master)](https://github.com/ertwrx/ertwrx/actions/workflows/CI_CD_Pipeline.yml)
+[![CI/CD](https://img.shields.io/github/actions/workflow/status/ertwrx/ertwrx/ci-cd.yml?branch=master)](https://github.com/ertwrx/ertwrx/actions/workflows/ci-cd.yml)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.x-lightgrey.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
