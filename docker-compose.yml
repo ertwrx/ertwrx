@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    # Expose to all interfaces for direct access if needed
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=0
+      - PYTHONOPTIMIZE=1  # Enable Python optimizations
+    volumes:
+      - ./logs:/app/logs:rw
+    # Fixed healthcheck to use wget instead of curl (which might not be in container)
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Remove read_only for now to eliminate potential issues
+    # read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"  # Expose on all interfaces
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/app/static:ro  # Mount static files as read-only
+    depends_on:
+      - web
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Remove custom network configuration which might be causing issues
+# networks:
+#   default:
+#     driver: bridge
+#     ipam:
+#       config:

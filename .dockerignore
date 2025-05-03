@@ -1,0 +1,49 @@
+# Version control
+.git
+.gitignore
+.github
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.env
+
+# Development and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Documentation
+README.md
+CHANGELOG.md
+docs/
+
+# Tests
+tests/
+
+# Docker related
+Dockerfile*
+.dockerignore
+docker-compose*
+
+# Other unnecessary files
+*.md
+LICENSE
+.DS_Store
